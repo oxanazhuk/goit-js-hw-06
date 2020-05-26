@@ -1,174 +1,107 @@
-"use strict";
+'use strict';
+import users from "./users.js";
 
-class Notepad {
-  constructor(notes = []) {
-    this._notes = notes;
-  }
-  get notes() {
-    return this._notes;
-  }
-  static Priority = {
-    LOW: 0,
-    NORMAL: 1,
-    HIGH: 2
-  };
-  findNoteById(id) {
-    for (let key of this._notes) {
-      if (key.id === id) {
-        return key;
-      }
-    }
-  }
-  saveNote(note) {
-    this._notes.push(note);
-    return note;
-  }
-  deleteNote(id) {
-    const findId = this.findNoteById(id);
-    if (findId.id === id) {
-      this._notes.splice(this._notes.indexOf(findId), 1);
-    }
-  }
-  updateNoteContent(id, updatedContent) {
-    let updateNew;
-    let findIdIndex;
-    const findId = this.findNoteById(id);
-    if (findId.id === id) {
-      findIdIndex = this.notes.indexOf(findId);
-      updateNew = {
-        ...findId,
-        ...updatedContent
-      };
-      this._notes[findIdIndex] = updateNew;
-    }
-    return updateNew;
-  }
-  updateNotePriority(id, priority) {
-    const findId = this.findNoteById(id);
-    if (findId.id === id) {
-      findId.priority = priority;
-      return findId;
-    }
-  }
-  filterNotesByQuery(query) {
-    const newNotes = [];
-    for (let key of this._notes) {
-      const titleLowerCase = key.title.toLowerCase();
-      const bodyLowerCase = key.body.toLowerCase();
-      if (titleLowerCase.includes(query) || bodyLowerCase.includes(query)) {
-        newNotes.push(key);
-      }
-    }
-    return newNotes;
-  }
-  filterNotesByPriority(priority) {
-    const newPriority = [];
-    for (let key of this._notes) {
-      if (key.priority === priority) {
-        newPriority.push(key);
-      }
-    }
-    return newPriority;
-  }
-}
 
-const initialNotes = [
-  {
-    id: "id-1",
-    title: "JavaScript essentials",
-    body:
-      "Get comfortable with all basic JavaScript concepts: variables, loops, arrays, branching, objects, functions, scopes, prototypes etc",
-    priority: Notepad.Priority.HIGH
-  },
-  {
-    id: "id-2",
-    title: "Refresh HTML and CSS",
-    body:
-      "Need to refresh HTML and CSS concepts, after learning some JavaScript. Maybe get to know CSS Grid and PostCSS, they seem to be trending.",
-    priority: Notepad.Priority.NORMAL
-  }
-];
+// ------Task 1-------
+// Получить массив имен всех пользователей (поле name)
+const getUserNames = users =>
+    users.map(({name}) => name);
 
-const notepad = new Notepad(initialNotes);
+console.log(getUserNames(users));
+// [ 'Moore Hensley', 'Sharlene Bush', 'Ross Vazquez', 
+//   'Elma Head', 'Carey Barr', 'Blackburn Dotson', 'Sheree Anthony' ]
 
-/*
-    Смотрю что у меня в заметках после инициализации
-  */
-console.log("Все текущие заметки: ", notepad.notes);
 
-/*
- * Добавляю еще 2 заметки и смотрю что получилось
- */
-notepad.saveNote({
-  id: "id-3",
-  title: "Get comfy with Frontend frameworks",
-  body:
-    "First must get some general knowledge about frameworks, then maybe try each one for a week or so. Need to choose between React, Vue and Angular, by reading articles and watching videos.",
-  priority: Notepad.Priority.NORMAL
-});
-
-notepad.saveNote({
-  id: "id-4",
-  title: "Winter clothes",
-  body:
-    "Winter is coming! Need some really warm clothes: shoes, sweater, hat, jacket, scarf etc. Maybe should get a set of sportwear as well so I'll be able to do some excercises in the park.",
-  priority: Notepad.Priority.LOW
-});
-
-console.log("Все текущие заметки: ", notepad.notes);
-
-/*
- * Зима уже близко, пора поднять приоритет на покупку одежды
- */
-notepad.updateNotePriority("id-4", Notepad.Priority.NORMAL);
-
-console.log("Заметки после обновления приоритета для id-4: ", notepad.notes);
-
-/*
- * Решила что фреймворки отложу немного, понижаю приоритет
- */
-notepad.updateNotePriority("id-3", Notepad.Priority.LOW);
-
-console.log("Заметки после обновления приоритета для id-3: ", notepad.notes);
-
-/*
- * Решила отфильтровать заметки по слову html
- */
-console.log(
-  'Отфильтровали заметки по ключевому слову "html": ',
-  notepad.filterNotesByQuery("html")
+// -------Task 2 ------
+// Получить массив объектов пользователей по цвету глаз (поле eyeColor).
+const getUsersWithEyeColor = (users, color) => users.filter(({eyeColor}) => 
+    eyeColor === color
 );
 
-/*
- * Решила отфильтровать заметки по слову javascript
- */
-console.log(
-  'Отфильтровали заметки по ключевому слову "javascript": ',
-  notepad.filterNotesByQuery("javascript")
-);
+console.log(getUsersWithEyeColor(users, 'blue'));
+// [объект Moore Hensley, объект Sharlene Bush, объект Carey Barr]
 
-/*
- * Хочу посмотреть только заметки с нормальным приоритетом
- */
-console.log(
-  "Отфильтровали заметки по нормальному приоритету: ",
-  notepad.filterNotesByPriority(Notepad.Priority.NORMAL)
-);
 
-/*
- * Обновим контент заметки с id-3
- */
-notepad.updateNoteContent("id-3", {
-  title: "Get comfy with React.js or Vue.js"
-});
+// ---------Task 3--------
+// Получить массив имен пользователей по полу (поле gender).
+const getUsersWithGender = (users, userGender) => 
+  users.filter(({gender}) => gender === userGender).map(({name}) => name);
 
-console.log(
-  "Заметки после обновления контента заметки с id-3: ",
-  notepad.notes
-);
+console.log(getUsersWithGender(users, 'male')); // [ 'Moore Hensley', 'Ross Vazquez',
+// //  'Carey Barr', 'Blackburn Dotson' ]
 
-/*
- * Повторила HTML и CSS, удаляю запись c id-2
- */
-notepad.deleteNote("id-2");
-console.log("Заметки после удаления с id -2: ", notepad.notes);
+
+// ----------Task 4--------
+// Получить массив только неактивных пользователей (поле isActive).
+const getInactiveUsers = users => users.filter(({isActive}) => !isActive);
+
+console.log(getInactiveUsers(users)); // [объект Moore Hensley, объект Ross Vazquez, 
+// объект Blackburn Dotson]
+
+
+// ---------Task 5--------
+// Получить пользователя (не массив) по email (поле email, он уникальный).
+const getUserWithEmail = (users, userEmail) => 
+  users.find(({email}) => userEmail === email);
+
+console.log(getUserWithEmail(users, 'shereeanthony@kog.com')); // {объект пользователя Sheree Anthony}
+console.log(getUserWithEmail(users, 'elmahead@omatom.com')); // {объект пользователя Elma Head}
+
+
+// ---------Task 6---------
+// Получить массив пользователей попадающих в возрастную категорию
+//  от min до max лет (поле age).
+const getUsersWithAge = (users, min, max) =>
+    users.filter(({age}) => age >= min && age <= max);
+
+console.log(getUsersWithAge(users, 20, 30)); // [объект Ross Vazquez, объект Elma Head, объект Carey Barr]
+
+console.log(getUsersWithAge(users, 30, 40));
+// [объект Moore Hensley, объект Sharlene Bush, объект Blackburn Dotson, объект Sheree Anthony]
+
+
+// -----------Task 7----------
+// Получить общую сумму баланса (поле balance) всех пользователей.
+const calculateTotalBalance = users =>
+    users.reduce((acc, {balance}) => (acc + balance), 0);
+
+console.log(calculateTotalBalance(users)); // 20916
+
+
+
+// ---------Task 8----------
+// Массив имен всех пользователей у которых есть друг с указанным именем.
+const getUsersWithFriend = (users, friendName) => 
+    users.filter(({friends}) => friends.includes(friendName))
+    .map(({name}) => name);
+
+console.log(getUsersWithFriend(users, 'Briana Decker')); // [ 'Sharlene Bush', 'Sheree Anthony' ]
+console.log(getUsersWithFriend(users, 'Goldie Gentry')); // [ 'Elma Head', 'Sheree Anthony' ]
+
+
+
+// ------------Task 9---------
+// Массив имен (поле name) людей, отсортированных в зависимости 
+// от количества их друзей (поле friends)
+const getNamesSortedByFriendsCount = users =>
+     users.map(({ name, friends }) => ({ name, friends: friends.length }))
+    .sort((a, b) => a.friends - b.friends)
+    .map(({ name }) => name);
+
+console.log(getNamesSortedByFriendsCount(users));
+// [ 'Moore Hensley', 'Sharlene Bush', 'Elma Head', 'Carey Barr', 'Blackburn Dotson', 'Sheree Anthony', 'Ross Vazquez' ]
+
+
+
+// -----------Task 10----------
+// Получить массив всех умений всех пользователей (поле skills), 
+// при этом не должно быть повторяющихся умений и они должны быть отсортированы
+//  в алфавитном порядке.
+const getSortedUniqueSkills = users => 
+    users.reduce((acc, user) => [...acc, ...user.skills], [])
+    .filter((item, position, arr) => arr.indexOf(item) === position)
+    .sort();
+
+
+console.log(getSortedUniqueSkills(users));
+// [ 'adipisicing', 'amet', 'anim', 'commodo', 'culpa', 'elit', 'ex', 'ipsum', 'irure', 'laborum', 'lorem', 'mollit', 'non', 'nostrud', 'nulla', 'proident', 'tempor', 'velit', 'veniam' ]
